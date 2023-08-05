@@ -6,8 +6,8 @@
 </head>
 <script>
 	function loginFormCheck() {
-		var id = document.getElementById("id");
-    	var pw = document.getElementById("pw");
+		var id = document.getElementById("userId");
+    	var pw = document.getElementById("userPw");
     	
 		if (id.value == "") {
 	    	alert("아이디를 입력해주세요✈");
@@ -19,25 +19,24 @@
 			pw.focus();
 			return false;
 	  	}
-		document.loginForm.submit();
+		document.deleteForm.submit();
 	}
 </script>
 <body class="text-center">
-<%@ include file="/resources/layout/nav.jsp"%>
-<form action="User/loginAction.jsp" name="loginForm" method="post">
+<%@ include file="/resources/layout/userNav.jsp"%>
+<form action="User/deleteUserAction.jsp" name="deleteForm" method="post">
   <main class="form-signin w-100 m-auto">
-      <p><h1 class="h3 mb-3 fw-normal">로그인</h1>
+      <p><h1 class="h3 mb-3 fw-normal">회원 탈퇴</h1>
       <div class="form-floating">
-        <input type="text" class="form-control" name="userId" id="id" autocomplete="off" placeholder="ID">
+        <input type="text" class="form-control" name="userId" id="userId" autocomplete="off" placeholder="ID">
         <label for="floatingInput">ID</label>
       </div>
       <div class="form-floating">
-        <input type="password" class="form-control" name="userPw" id="pw" placeholder="Password">
+        <input type="password" class="form-control" name="userPw" id="userPw" placeholder="Password">
         <label for="floatingPassword">Password</label>
       </div>
       <div class="my-2">
-        <input type="button" value="확인" class="btn btn-dark" onclick="loginFormCheck();">
-        <input type="button" value="회원가입" class="btn btn-dark" onclick = "location.href='join.jsp'">
+        <input type="button" value="탈퇴" class="btn btn-dark" onclick = "location.href='deleteUserAction.jsp'">
       </div>
     </form>
   </main>
