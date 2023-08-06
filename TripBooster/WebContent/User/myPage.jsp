@@ -49,11 +49,9 @@
 <body class="text-center">
 <%@ include file="/resources/layout/userNav.jsp"%>
 <form action="updateUserInfoAction.jsp" name="mypageForm" method="post">
-  <main class="form-signin w-100 m-auto">
-      <p><h1 class="h3 mb-3 fw-normal"><strong>내 정보</strong></h1>
-      <div class="form-floating">
-        <input type="text" class="form-control" name="userName" id="userName" autocomplete="off" placeholder="name" >
-         <%
+<main class="form-signin w-100 m-auto">
+	<p><h1 class="h3 mb-3 fw-normal"><strong>내 정보</strong></h1>
+	<%
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			request.setCharacterEncoding("UTF-8");
@@ -63,46 +61,51 @@
 		   	String password = "abcd1234"; // 데이터베이스 비밀번호
 		   	
 			Connection con = DriverManager.getConnection(url, user, password);
+			con.setAutoCommit(false);
 			
-			String userNum = (String) session.getAttribute("userNumSession");
+			String userId = (String) session.getAttribute("userIdSession");
 			
-			String sql = "SELECT userName, userTel FROM userTbl WHERE userNum = ?";
+			String sql = "SELECT userName, userTel FROM userTbl WHERE userId = ?";
 			
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, userNum);
+			pstmt.setString(1, userId);
+			
 			ResultSet rs = pstmt.executeQuery();
+			
 			while(rs.next()) {
-		%>
-        <label for="floatingName"><%=rs.getString(1)%></label>
-      </div>
-         <div class="form-floating">
-        <input type="text" class="form-control" name="userTel" id="userTel" autocomplete="off" oninput="autoHyphen(this)" placeholder="000-0000-0000" maxlength="13">
-        <label for="floatingPhonenumber"><%=rs.getString("userTel")%></label>
-      </div>
-        <%
+	%>
+			<div class="form-floating">
+				<input type="text" class="form-control" name="userName" value="<%=rs.getString("userName") %>" id="userName" autocomplete="off" placeholder="name" >
+			</div>
+			<div class="form-floating">
+		       	<input type="text" class="form-control" name="userTel" id="userTel" value="<%=rs.getString("userTel") %>" autocomplete="off" oninput="autoHyphen(this)" placeholder="000-0000-0000" maxlength="13">
+		   	</div>
+   	<%
 			}
+			
 			con.commit();
 			rs.close();
 			pstmt.close();
 			con.close();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		%>
-      <div class="form-floating">
-        <input type="password" class="form-control" name="userPw" id="userPw" placeholder="Password">
-        <label for="floatingPassword">Password</label>
-      </div>
-      <div class="form-floating">
-        <input type="password" class="form-control" name="userrePw" id="userrePw" placeholder="rePassword">
-        <label for="floatingrePassword">rePassword</label>
-      </div>
-      <div class="my-2">
-        <input type="button" value="회원정보 수정" class="btn btn-dark" onclick="updateformCheck();">
-        <input type="button" value="회원 탈퇴" class="btn btn-dark" onclick = "location.href='deleteUser.jsp'">
-      </div>
-    </form>
-  </main>
-  <%@ include file="/resources/layout/footer.jsp"%>
+	%>
+		<div class="form-floating">
+	        <input type="password" class="form-control" name="userPw" id="userPw" placeholder="Password">
+	        <label for="floatingPassword">Password</label>
+		</div>
+		<div class="form-floating">
+			<input type="password" class="form-control" name="userrePw" id="userrePw" placeholder="rePassword">
+			<label for="floatingrePassword">rePassword</label>
+		</div>
+		<div class="my-2">
+			<input type="button" value="회원정보 수정" class="btn btn-dark" onclick="updateformCheck();">
+			<input type="button" value="회원 탈퇴" class="btn btn-dark" onclick="location.href='deleteUser.jsp'">
+		</div>
+	</form>
+</main>
+<%@ include file="/resources/layout/footer.jsp"%>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <%@ include file="/resources/layout/head.jsp"%>
 </head>
 <script>
-	function loginFormCheck() {
+	function deleteformCheck() {
 		var id = document.getElementById("userId");
     	var pw = document.getElementById("userPw");
     	
@@ -24,7 +24,7 @@
 </script>
 <body class="text-center">
 <%@ include file="/resources/layout/userNav.jsp"%>
-<form action="User/deleteUserAction.jsp" name="deleteForm" method="post">
+<form action="deleteUserAction.jsp" name="deleteForm" method="post">
   <main class="form-signin w-100 m-auto">
       <p><h1 class="h3 mb-3 fw-normal">회원 탈퇴</h1>
       <div class="form-floating">
@@ -36,7 +36,7 @@
         <label for="floatingPassword">Password</label>
       </div>
       <div class="my-2">
-        <input type="button" value="탈퇴" class="btn btn-dark" onclick = "location.href='deleteUserAction.jsp'">
+        <input type="button" value="탈퇴" class="btn btn-dark" onclick = "deleteformCheck();">
       </div>
     </form>
   </main>

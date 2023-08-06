@@ -17,9 +17,12 @@
 			String uId = (String) session.getAttribute("userIdSession");
 			String uName = (String) session.getAttribute("userNameSession");
 		%>
-		<a href="User/myPage.jsp"><strong><%=uName%></strong></a>님 떠나볼까요?✈ &nbsp;&nbsp;
+		<a href="/User/myPage.jsp"><strong><%=uName%></strong></a>님 떠나볼까요?✈ &nbsp;&nbsp;
 		<div class="ml-auto">
-			<a href="logout.jsp" class="btn btn-outline-light" type="submit">로그아웃</a>
+			<a href="#" class="btn btn-outline-light" type="submit">💖</a>
+		</div>&nbsp;&nbsp;
+		<div class="ml-auto">
+			<a href="/logout.jsp" class="btn btn-outline-light" type="submit">로그아웃</a>
 		</div>
 		<button class="navbar-toggler" type="button"
 			data-bs-toggle="collapse" data-bs-target="#navbarCollapse"

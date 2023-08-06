@@ -4,7 +4,7 @@
 <html>
 <head>
 <title>TripBooster</title>
-<%@ include file="resources/layout/head.jsp"%>
+<%@ include file="/resources/layout/head.jsp"%>
 </head>
 <style>
   /* 자동차 아이콘에 대한 애니메이션 */

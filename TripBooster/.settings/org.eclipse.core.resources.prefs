@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//WebContent/Trip/tripindex.jsp=UTF-8
+encoding//WebContent/User/deleteUserAction.jsp=UTF-8
 encoding//WebContent/index.jsp=UTF-8
 encoding//WebContent/resources/layout/adminNav.jsp=UTF-8
 encoding//WebContent/resources/layout/nav.jsp=UTF-8

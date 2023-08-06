@@ -8,44 +8,43 @@
 </head>
 <body>
 <%
+	request.setCharacterEncoding("UTF-8");
+	String userId = request.getParameter("userId");
+	String userPw = request.getParameter("userPw");
+
+	String url = "jdbc:mysql://localhost:3306/TripBooster";
+	String user = "root";
+   	String password = "abcd1234";
+   	
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
-		request.setCharacterEncoding("UTF-8");
-		
-		String url = "jdbc:mysql://localhost:3306/TripBooster";
-		String user = "root";
-	   	String password = "abcd1234";
-	   	
+	
 		Connection con = DriverManager.getConnection(url, user, password);
 		con.setAutoCommit(false);
-		
-		String userNum = (String) session.getAttribute("userNumSession");
-		String userId = request.getParameter("userId");
-		String userPw = request.getParameter("userPw");
-		
-		String sql = "SELECT * FROM userTbl WHERE userId = ? AND userPw = ?";
+
+		String sql = "SELECT userNum FROM userTbl WHERE userId = ? AND userPw = ?";
 		
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		
 		pstmt.setString(1, userId);
 		pstmt.setString(2, userPw);
 		
+		
 		ResultSet rs = pstmt.executeQuery();
 		
 		if (rs.next()) {
-		    pstmt.close();
-
-		    String deleteSql = "DELETE FROM userTbl WHERE userNum = ?";
-		    pstmt = con.prepareStatement(deleteSql);
-
-		    pstmt.setString(1, userNum);
-
-		    pstmt.executeUpdate();
+			sql = "DELETE FROM usertbl WHERE userNum = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, rs.getString(1));
+			pstmt.executeUpdate();
+			
 		    con.commit();
 %>
 		<script>
 			alert("탈퇴 완료✈");
 			location.href="../index.jsp";
+			<% session.invalidate(); %>
 		</script>
 <%
 		} else {
@@ -56,7 +55,10 @@
 		</script>
 <%
 		}
+		
+		pstmt.close();
 		con.close();
+		rs.close();
 		
 	} catch(Exception e) {
 		e.printStackTrace();
