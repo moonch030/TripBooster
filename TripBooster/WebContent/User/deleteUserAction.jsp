@@ -22,7 +22,7 @@
 		Connection con = DriverManager.getConnection(url, user, password);
 		con.setAutoCommit(false);
 
-		String sql = "SELECT userNum FROM userTbl WHERE userId = ? AND userPw = ?";
+		String sql = "SELECT userId FROM userTbl WHERE userId = ? AND userPw = ?";
 		
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		
@@ -33,10 +33,10 @@
 		ResultSet rs = pstmt.executeQuery();
 		
 		if (rs.next()) {
-			sql = "DELETE FROM usertbl WHERE userNum = ?";
+			sql = "DELETE FROM usertbl WHERE userId = ?";
 			
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, rs.getString(1));
+			pstmt.setString(1,userId);
 			pstmt.executeUpdate();
 			
 		    con.commit();
