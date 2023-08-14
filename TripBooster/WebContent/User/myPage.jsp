@@ -63,12 +63,10 @@
 			Connection con = DriverManager.getConnection(url, user, password);
 			con.setAutoCommit(false);
 			
-			String userId = (String) session.getAttribute("userIdSession");
-			
-			String sql = "SELECT userName, userTel FROM userTbl WHERE userId = ?";
+			String sql = "SELECT userName, userTel FROM userTbl WHERE userNum = ?";
 			
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, userId);
+			pstmt.setString(1, userNum);
 			
 			ResultSet rs = pstmt.executeQuery();
 			

@@ -31,7 +31,7 @@
 		ResultSet rs = pstmt.executeQuery();
 		
 		if(rs.next()) {
-			session.setAttribute("userIdSession", rs.getString("userId"));
+			session.setAttribute("userNumSession", rs.getString("userNum"));
 			session.setAttribute("userNameSession", rs.getString("userName"));
 %>
 		<script>

@@ -1,107 +1,173 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>TripBooster</title>
 <%@ include file="/resources/layout/head.jsp"%>
 </head>
-<style>
-  /* 자동차 아이콘에 대한 애니메이션 */
-  @keyframes drivingIcon {
-    0% { transform: translateX(-5000%); }
-    100% { transform: translateX(5000%); }
-}
-</style>
 <body>
-		<%
-		request.setCharacterEncoding("UTF8");
-		response.setCharacterEncoding("UTF-8");
 
-		String uId = (String) session.getAttribute("userIdSession");
-		String uName = (String) session.getAttribute("userNameSession");
+<%
+    request.setCharacterEncoding("UTF8");
+    response.setCharacterEncoding("UTF-8");
 
-		if (uId == null) {
-		%>
-		<nav class="navbar navbar-expand-md navbar-dark bg-info">
-			<div class="container">
-				<a class="navbar-brand" href="index.jsp"><strong>TripBooster</strong></a>
-					<form class="d-flex mx-auto">
-   						 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 500px;">
-   		 					 <button class="btn btn-outline-light" type="submit">
-    						  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 20">
-     		  				  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-    		 				  </svg>
-  		  				     </button>
-    				</form>	
-				<div class="ml-auto">
-					<a href="login.jsp" class="btn btn-outline-light" type="submit">로그인</a>
-				</div>
-				<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-				aria-controls="navbarCollapse" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-				</button>
-			</div>
-		</nav>
-		<%
-		}
+    String userNum = (String) session.getAttribute("userNumSession");
+    String userName = (String) session.getAttribute("userNameSession");
 
-		if (uId != null) {
-		%>
-			<%
-				if (uId.equals("admin")) {
-			%>
-					<jsp:include page="resources/layout/adminNav.jsp"></jsp:include>
-			<%
-				} else {
-			%>
-					<jsp:include page="resources/layout/userNav.jsp"></jsp:include>
-			<%
-				}
-			}
-		%>
-		</nav>
-	<div class="container">
-		<header class="text-center mt-5">
-			<h1 class="display-4" id="changeText"
-				style="font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">진행시켜</h1>
-			<i class="fas fa-car-side"
-				style="animation: drivingIcon 10s linear infinite;"></i>
-		</header>
+    try {
+        Class.forName("com.mysql.jdbc.Driver");
+        request.setCharacterEncoding("UTF-8");
+
+        String url = "jdbc:mysql://localhost:3306/TripBooster";
+        String user = "root"; // 데이터베이스 사용자 이름
+        String password = "abcd1234"; // 데이터베이스 비밀번호
+
+        Connection con = DriverManager.getConnection(url, user, password);
+        con.setAutoCommit(false);
+
+        String sql = "SELECT t.tripNum, t.tripCode, t.tripSort, t.tripName, t.tripLoca, t.tripImg, COUNT(l.likeNum) AS likeCount"+
+                " FROM tripTbl t"+
+                " LEFT JOIN userLikeTbl l ON t.tripNum = l.tripNum"+
+                " GROUP BY t.tripNum"+
+                " ORDER BY likeCount DESC"+
+                " LIMIT 5;";
+
+        PreparedStatement pstmt = con.prepareStatement(sql);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if (userName == null) {
+%>
+    <jsp:include page="/resources/layout/nav.jsp"></jsp:include>
+<%
+        }
+
+        if (userName != null) {
+%>
+    <%
+        if (userName.equals("관리자")) {
+    %>
+            <jsp:include page="/resources/layout/adminNav.jsp"></jsp:include>
+    <%
+        } else {
+    %>
+            <jsp:include page="/resources/layout/userNav.jsp"></jsp:include>
+    <%
+        }
+    }
+%>
+
+<div id="demo" class="carousel slide mb-6" data-ride="carousel">
+    <div class="carousel-inner">
+        <%
+            int index = 0; // 현재 반복되는 루프의 인덱스
+            while (rs.next()) {
+                String activeClass = (index == 0) ? "active" : ""; // 첫 번째 슬라이드에 "active" 클래스를 추가하고 나머지 슬라이드에는 클래스를 추가하지 않음
+        %>
+        <div class="carousel-item <%= activeClass %>"> <!-- 슬라이더의 각 항목을 나타내는 div 요소를 생성 -->
+            <img class="d-block w-100" src="/resources/images/<%= rs.getString("tripImg") %>"
+                alt="<%=rs.getString("tripName")%>" style="height: 600px;">
+            <div class="carousel-caption d-none d-md-block">
+                <h2><b><%=rs.getString("tripName")%></b></h2>
+                <p><%=rs.getString("tripLoca")%></p>
+            </div>
+        </div>
+        <%
+                index++;
+            }
+			rs.close();
+			pstmt.close();
+			con.close();
+			
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+%>
+<a class="carousel-control-prev" href="#demo" data-slide="prev">
+	        	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	        <!-- <span>Previous</span> -->
+	    	</a>
+	    	<a class="carousel-control-next" href="#demo" data-slide="next">
+	        	<span class="carousel-control-next-icon" aria-hidden="true"></span>
+	        <!-- <span>Next</span> -->
+	        </a>
+	    	<!-- / 화살표 버튼 끝 -->
+	    	<!-- 인디케이터 -->
+		    <ul class="carousel-indicators">
+		    	<li data-target="#demo" data-slide-to="0" class="active"></li> <!--0번부터시작-->
+		    	<li data-target="#demo" data-slide-to="1"></li>
+		    	<li data-target="#demo" data-slide-to="2"></li>
+		    	<li data-target="#demo" data-slide-to="3"></li>
+		    	<li data-target="#demo" data-slide-to="4"></li>
+		    </ul>
+		    <!-- 인디케이터 끝 -->
+    </div>
+</div>
+<%
+try {
+    Class.forName("com.mysql.jdbc.Driver");
+    request.setCharacterEncoding("UTF-8");
+
+    String url = "jdbc:mysql://localhost:3306/TripBooster";
+    String user = "root"; // 데이터베이스 사용자 이름
+    String password = "abcd1234"; // 데이터베이스 비밀번호
+
+    Connection con = DriverManager.getConnection(url, user, password);
+    con.setAutoCommit(false);
+
+    String sql = "SELECT t.tripNum, t.tripCode, t.tripSort, t.tripName, t.tripLoca, t.tripImg, COUNT(l.likeNum) AS likeCount"+
+            " FROM tripTbl t"+
+            " LEFT JOIN userLikeTbl l ON t.tripNum = l.tripNum"+
+            " GROUP BY t.tripNum"+
+            " ORDER BY likeCount DESC"+
+            " LIMIT 5;";
+
+    PreparedStatement pstmt = con.prepareStatement(sql);
+
+    ResultSet rs = pstmt.executeQuery();
+%>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="text-left">
+    		<br><h1 class="display-3"><b>국내 여행지 <br>TOP 5 ✈</b></h1>
+		</div>
+<%
+            while (rs.next()) {
+%>
+	 <div class="col">
+	    <div class="card shadow-sm">
+	        <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+	             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+	             preserveAspectRatio="xMidYMid slice" focusable="false">
+	            <a href="/Trip/tripChoice.jsp?tripNum=<%=rs.getString("tripNum")%>&tripSort=<%=rs.getString("tripSort")%>">
+	                <image href="/resources/images/<%=rs.getString("tripImg")%>" width="100%" height="100%" />
+	            </a>
+	        </svg>
+	        <div class="card-body">
+	            <p class="card-text"><%= rs.getString("tripName") %></p>
+	            <div class="d-flex justify-content-between align-items-center">
+	                <div class="btn-group">
+	                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='User/userLikeAction.jsp?tripNum=<%=rs.getString("tripNum")%>'" >❤</button>
+	                </div>
+	                <small class="text-muted">✈ <%= rs.getString("likeCount") %></small>
+	            </div>
+	        </div>
+	    </div>
 	</div>
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	<div id="map" style="height: 500px;"></div>
-	<script>
-		// Initialize the map
-		var map = L.map('map').setView([ 35.9078, 127.7669 ], 7); // Center the map on South Korea
-		// Add the map tile layer with CartoDB.Voyager style
-		L
-				.tileLayer(
-						'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-						{
-							attribution : '&copy; <a href="https://carto.com/">CartoDB</a> contributors'
-						}).addTo(map);
 
-		// Array of text to be displayed
-		var textArray = [ "신속하고", "빠르게", "진행시켜" ];
-
-		// Function to change the text in the 'lead' class every 1 second
-		function changeText() {
-			var idx = 0;
-			setInterval(
-					function() {
-						document.getElementById('changeText').innerText = textArray[idx];
-						idx = (idx + 1) % textArray.length;
-					}, 1000);
-		}
-
-		// Call the function to start text change
-		changeText();
-	</script>
-	<%@ include file="resources/layout/footer.jsp"%>
+<% 
+                }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+%>
+    </div>
+</div>
+<%@ include file="/resources/layout/footer.jsp"%>
 </body>
 </html>
