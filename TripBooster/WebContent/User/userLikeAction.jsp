@@ -11,7 +11,7 @@
 	%>
 		<script>
 			alert("로그인 해주세요✈");
-			location.href = document.referrer; //이전페이지로 이동 후 리로드
+			window.history.back(); //이전페이지로 이동 후 리로드
 		</script>
 	<%
 		}

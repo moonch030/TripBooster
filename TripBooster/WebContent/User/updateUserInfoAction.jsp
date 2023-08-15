@@ -35,8 +35,8 @@
 		pstmt.close();
 		con.close();
 		
-		// String newName = request.getParameter("userName");
-		// session.setAttribute("userName", newName);
+		String newName = request.getParameter("userName");
+		session.setAttribute("userNameSession", newName);
 		
 	%>
 	<script>

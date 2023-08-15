@@ -126,9 +126,9 @@ try {
 	    <input type="hidden" name="tripNum" value="<%=rs.getString("tripNum")%>">
 	    	<div class="form-group">
 	      	  <label for="comment">리뷰 작성:</label>
-	       	 <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+	       	 <textarea class="form-control" id="comments" name="comments" rows="3">본인 작성 댓글</textarea>
 	    </div>
-	    <button type="submit" class="btn btn-outline-light" style="background-color: #5bc0de;">작성</button>
+	    <input type="submit" class="btn btn-outline-light" style="background-color: #5bc0de;" value ="작성">
 	</form>
 
             <%
@@ -190,7 +190,7 @@ try {
     	if (userNum.equals(commentUserNum)) { // 본인 댓글만 삭제 가능
 %>
 		<td style="text-align: right;">
-		<a href="/Comments/updateCommentsAction.jsp?commentNum=<%=rs.getString("commentNum")%>&tripNum=<%=rs.getString("tripNum")%>" class="btn btn-outline-light" style="background-color: #5bc0de;">수정</a>
+		<a href="/Comments/updateCommentsAction.jsp?commentNum=<%=rs.getString("commentNum")%>&tripNum=<%=rs.getString("tripNum")%>" class="btn btn-outline-light" style="background-color: #5bc0de;">버튼으로 수정</a>
 		<a href="/Comments/deleteCommentsAction.jsp?commentNum=<%=rs.getString("commentNum")%>&tripNum=<%=rs.getString("tripNum")%>" class="btn btn-outline-light" style="background-color: #5bc0de;">삭제</a>
 		</td>
 <%
