@@ -184,19 +184,19 @@ try {
 		<td><%=rs.getString("userName")%></td>
 		<td><%=rs.getString("comments")%></td>
 		<td><%=rs.getString("createdAt")%></td>
+		<td style="text-align: right;">
 <%
 	if (userNum != null) {
    	 	String commentUserNum = rs.getString("userNum");
     	if (userNum.equals(commentUserNum)) { // 본인 댓글만 삭제 가능
 %>
-		<td style="text-align: right;">
 		<a href="/Comments/updateCommentsAction.jsp?commentNum=<%=rs.getString("commentNum")%>&tripNum=<%=rs.getString("tripNum")%>" class="btn btn-outline-light" style="background-color: #5bc0de;">버튼으로 수정</a>
 		<a href="/Comments/deleteCommentsAction.jsp?commentNum=<%=rs.getString("commentNum")%>&tripNum=<%=rs.getString("tripNum")%>" class="btn btn-outline-light" style="background-color: #5bc0de;">삭제</a>
-		</td>
 <%
     }
 	}
 %>
+	</td>
 	</tbody>
 <%
     }
